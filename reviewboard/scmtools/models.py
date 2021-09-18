@@ -30,7 +30,7 @@ from reviewboard.scmtools.signals import (checked_file_exists,
                                           checking_file_exists,
                                           fetched_file, fetching_file)
 from reviewboard.site.models import LocalSite
-
+logger = logging.getLogger(__name__)
 
 @python_2_unicode_compatible
 class Tool(models.Model):
@@ -520,7 +520,7 @@ class Repository(models.Model):
                 s = ('Unable to generate a unique hooks UUID for '
                      'repository %s after %d attempts'
                      % (self.pk, max_attempts))
-                logging.error(s)
+                logger.error(s)
                 raise Exception(s)
 
         return self.hooks_uuid

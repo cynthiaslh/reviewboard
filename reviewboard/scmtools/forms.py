@@ -927,7 +927,7 @@ class RepositoryForm(LocalSiteAwareModelFormMixin, forms.ModelForm):
                                   local_site=self.local_site,
                                   prefix=hosting_service_id)
             except Exception as e:
-                logging.exception('Error loading hosting service %s: %s',
+                logger.exception('Error loading hosting service %s: %s',
                                   hosting_service_id, e)
 
         for class_name, cls in six.iteritems(FAKE_HOSTING_SERVICES):
@@ -981,7 +981,7 @@ class RepositoryForm(LocalSiteAwareModelFormMixin, forms.ModelForm):
                 self._load_scmtool(scmtool_cls=scmtool_cls,
                                    is_active=is_tool_active)
             except Exception as e:
-                logging.exception('Error loading SCMTool %s: %s',
+                logger.exception('Error loading SCMTool %s: %s',
                                   tool.class_name, e)
                 continue
 
@@ -1934,7 +1934,7 @@ class RepositoryForm(LocalSiteAwareModelFormMixin, forms.ModelForm):
             if not hosting_service.is_ssh_key_associated(repository, key):
                 hosting_service.associate_ssh_key(repository, key)
         except SSHKeyAssociationError as e:
-            logging.warning('SSHKeyAssociationError for repository "%s" (%s)'
+            logger.warning('SSHKeyAssociationError for repository "%s" (%s)'
                             % (repository, e.message))
             raise ValidationError([
                 _('Unable to associate SSH key with your hosting service. '
@@ -2359,7 +2359,7 @@ class RepositoryForm(LocalSiteAwareModelFormMixin, forms.ModelForm):
                 raise ValidationError(six.text_type(e),
                                       code='repo_auth_failed')
             except Exception as e:
-                logging.exception(
+                logger.exception(
                     'Unexpected exception while verifying repository path for '
                     'hosting service %r using plan %r and tool %r: %s',
                     hosting_service, plan, tool, e)

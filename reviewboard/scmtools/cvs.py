@@ -24,6 +24,7 @@ from reviewboard.ssh.errors import SSHAuthenticationError, SSHError
 
 
 sshutils.register_rbssh('CVS_RSH')
+logger = logging.getLogger(__name__)
 
 
 class CVSTool(SCMTool):
@@ -676,7 +677,7 @@ class CVSClient(object):
         errmsg = six.text_type(p.stderr.read())
 
         if p.wait() != 0:
-            logging.error('CVS repository validation failed for '
+            logger.error('CVS repository validation failed for '
                           'CVSROOT %s: %s',
                           self.cvsroot, errmsg)
 

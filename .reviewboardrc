@@ -1,11 +1,5 @@
 REVIEWBOARD_URL = "https://reviews.reviewboard.org"
 REPOSITORY = "Review Board"
 REPOSITORY_TYPE = "git"
-BRANCH = "master"
-TRACKING_BRANCH = "origin/master"
-LAND_DEST_BRANCH = "master"
-
-ALIASES = {
-    'clear-pycs': "!find . -name '*.pyc' -delete",
-}
-
+BRANCH = "first_easy_fix_bug"
+LAND_DEST_BRANCH = "first_easy_fix_bug"

@@ -6,6 +6,7 @@ import logging
 import os
 from collections import OrderedDict
 from datetime import datetime
+logger = logging.getLogger(__name__)
 
 try:
     from subvertpy import (AUTH_PARAM_DEFAULT_PASSWORD,
@@ -316,7 +317,7 @@ class Client(base.Client):
 
         try:
             info = client.info(path)
-            logging.debug('SVN: Got repository information for %s: %s' %
+            logger.debug('SVN: Got repository information for %s: %s' %
                           (path, info))
         except SubversionException as e:
             if on_failure:
@@ -432,7 +433,7 @@ class Client(base.Client):
 
             diff = out.read()
         except Exception as e:
-            logging.error('Failed to generate diff using subvertpy for '
+            logger.error('Failed to generate diff using subvertpy for '
                           'revisions %s:%s for path %s: %s',
                           revision1, revision2, path, e, exc_info=1)
             raise SCMError(

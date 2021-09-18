@@ -7,6 +7,7 @@ from collections import OrderedDict
 from datetime import datetime
 from shutil import rmtree
 from tempfile import mkdtemp
+logger = logging.getLogger(__name__)
 
 try:
     import pysvn
@@ -164,7 +165,7 @@ class Client(base.Client):
 
         try:
             info = self.client.info2(path, recurse=False)
-            logging.debug('SVN: Got repository information for %s: %s' %
+            logger.debug('SVN: Got repository information for %s: %s' %
                           (path, info))
         except ClientError as e:
             if on_failure:
@@ -257,7 +258,7 @@ class Client(base.Client):
                 header_encoding='UTF-8',
                 diff_options=['-u']))
         except Exception as e:
-            logging.error('Failed to generate diff using pysvn for revisions '
+            logger.error('Failed to generate diff using pysvn for revisions '
                           '%s:%s for path %s: %s',
                           revision1, revision2, path, e, exc_info=1)
             raise SCMError(

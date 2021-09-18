@@ -25,7 +25,7 @@ from reviewboard.scmtools.errors import (AuthenticationError,
 from reviewboard.scmtools.svn.utils import (collapse_svn_keywords,
                                             has_expanded_svn_keywords)
 from reviewboard.ssh import utils as sshutils
-
+logger = logging.getLogger(__name__)
 
 # These will be set later in recompute_svn_backend().
 Client = None
@@ -398,7 +398,7 @@ class SVNTool(SCMTool):
 
     @staticmethod
     def on_ssl_failure(e, path, cert_data):
-        logging.error('SVN: Failed to get repository information '
+        logger.error('SVN: Failed to get repository information '
                       'for %s: %s' % (path, e))
 
         error = SVNTool.normalize_error(e)
@@ -726,7 +726,7 @@ def recompute_svn_backend():
             # Check that this is a valid SVN backend.
             if (not hasattr(mod, 'has_svn_backend') or
                 not hasattr(mod, 'Client')):
-                logging.error('Attempted to load invalid SVN backend %s',
+                logger.error('Attempted to load invalid SVN backend %s',
                               backend_path)
                 continue
 
@@ -739,11 +739,11 @@ def recompute_svn_backend():
 
             if has_svn_backend:
                 # We found a suitable backend.
-                logging.info('Using %s backend for SVN', backend_path)
+                logger.info('Using %s backend for SVN', backend_path)
                 Client = mod.Client
                 break
         except ImportError:
-            logging.error('Unable to load SVN backend %s',
+            logger.error('Unable to load SVN backend %s',
                           backend_path, exc_info=1)
 
 recompute_svn_backend()

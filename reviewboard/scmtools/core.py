@@ -28,6 +28,7 @@ from reviewboard.scmtools.errors import (AuthenticationError,
 from reviewboard.ssh import utils as sshutils
 from reviewboard.ssh.errors import SSHAuthenticationError
 
+logger = logging.getLogger(__name__)
 
 class ChangeSet(object):
     """A server-side changeset.
@@ -1113,7 +1114,7 @@ class SCMTool(object):
         """
         if sshutils.is_ssh_uri(path):
             username, hostname = SCMTool.get_auth_from_uri(path, username)
-            logging.debug(
+            logger.debug(
                 "%s: Attempting ssh connection with host: %s, username: %s"
                 % (cls.__name__, hostname, username))
 
@@ -1329,7 +1330,7 @@ class SCMClient(object):
                 Unexpected error in fetching the file. This may be an
                 unexpected HTTP status code.
         """
-        logging.info('Fetching file from %s' % url)
+        logger.info('Fetching file from %s' % url)
 
         try:
             request = URLRequest(url)
@@ -1354,9 +1355,9 @@ class SCMClient(object):
             else:
                 msg = "HTTP error code %d when fetching file from %s: %s" % \
                       (e.code, url, e)
-                logging.error(msg)
+                logger.error(msg)
                 raise SCMError(msg)
         except Exception as e:
             msg = "Unexpected error fetching file from %s: %s" % (url, e)
-            logging.error(msg)
+            logger.error(msg)
             raise SCMError(msg)

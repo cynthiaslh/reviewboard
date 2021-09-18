@@ -18,6 +18,8 @@ from reviewboard.diffviewer.parser import DiffParser
 from reviewboard.scmtools.core import SCMTool, HEAD, PRE_CREATION
 from reviewboard.scmtools.errors import SCMError, FileNotFoundError
 
+logger = logging.getLogger(__name__)
+
 # This specific import is necessary to handle the paths for
 # cygwin enabled machines.
 if sys.platform.startswith(('win', 'cygwin')):
@@ -47,7 +49,7 @@ def get_cleartool():
         if not _cleartool:
             _cleartool = 'cleartool'
 
-        logging.debug('Using cleartool %s', _cleartool)
+        logger.debug('Using cleartool %s', _cleartool)
 
     return _cleartool
 
@@ -146,7 +148,7 @@ class ClearCaseTool(SCMTool):
 
         cmdline = [get_cleartool()] + cmdline
 
-        logging.debug('Running %s', subprocess.list2cmdline(cmdline))
+        logger.debug('Running %s', subprocess.list2cmdline(cmdline))
 
         p = subprocess.Popen(
             cmdline,
@@ -539,7 +541,7 @@ class ClearCaseDiffParser(DiffParser):
             try:
                 info['origFile'] = self._oid2filename(m.group(1))
             except Exception:
-                logging.debug('oid (%s) not found, get filename from client',
+                logger.debug('oid (%s) not found, get filename from client',
                               m.group(1))
                 info['origFile'] = self.client_relpath(current_filename)
 
@@ -548,7 +550,7 @@ class ClearCaseDiffParser(DiffParser):
             try:
                 info['newFile'] = self._oid2filename(m.group(2))
             except Exception:
-                logging.debug('oid (%s) not found, get filename from client',
+                logger.debug('oid (%s) not found, get filename from client',
                               m.group(2))
                 info['newFile'] = self.client_relpath(current_filename)
 
@@ -615,12 +617,12 @@ class ClearCaseDiffParser(DiffParser):
             revision = None
 
         relpath = ''
-        logging.debug('vobstag: %s, path: %s', self.vobstag, path)
+        logger.debug('vobstag: %s, path: %s', self.vobstag, path)
 
         while True:
             # An error should be raised if vobstag cannot be reached.
             if path == '/':
-                logging.debug('vobstag not found in path, use client filename')
+                logger.debug('vobstag not found in path, use client filename')
                 return filename
 
             # Vobstag reach, relpath can be returned.
@@ -635,7 +637,7 @@ class ClearCaseDiffParser(DiffParser):
             else:
                 relpath = os.path.join(basename, relpath)
 
-        logging.debug('relpath: %s', relpath)
+        logger.debug('relpath: %s', relpath)
 
         if revision:
             relpath = relpath + '@@' + revision
